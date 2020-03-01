@@ -25,7 +25,8 @@ class CalendarHeader extends Component {
     onPressArrowRight: PropTypes.func,
     disableArrowLeft: PropTypes.bool,
     disableArrowRight: PropTypes.bool,
-    webAriaLevel: PropTypes.number
+    webAriaLevel: PropTypes.number,
+    monthComponent: PropTypes.func,
   };
 
   static defaultProps = {
@@ -100,6 +101,14 @@ class CalendarHeader extends Component {
   render() {
     let leftArrow = <View/>;
     let rightArrow = <View/>;
+    let monthComponent = (
+      <Text allowFontScaling={false} style={this.style.monthText} accessibilityTraits='header'>
+        {this.props.month.toString(this.props.monthFormat)}
+      </Text>
+    )
+    if (this.props.monthComponent) {
+      monthComponent = this.props.monthComponent(this.props.month, this.props.monthFormat)
+    }
     let weekDaysNames = weekDayNames(this.props.firstDay);
     const {testID} = this.props;
 
@@ -161,13 +170,7 @@ class CalendarHeader extends Component {
         <View style={this.style.header}>
           {leftArrow}
           <View style={{flexDirection: 'row'}}>
-            <Text
-              allowFontScaling={false}
-              style={this.style.monthText}
-              {...webProps}
-            >
-              {this.props.month.toString(this.props.monthFormat)}
-            </Text>
+            {monthComponent}
             {indicator}
           </View>
           {rightArrow}
