@@ -51,7 +51,9 @@ class CalendarList extends Component {
     /** Whether to use static header that will not scroll with the list (horizontal only) */
     staticHeader: PropTypes.bool,
     /** A custom key extractor for the generated calendar months */
-    keyExtractor: PropTypes.func
+    keyExtractor: PropTypes.func,
+    renderHeader: PropTypes.func,
+    monthComponent: PropTypes.func,
   }
 
   static defaultProps = {
@@ -216,6 +218,7 @@ class CalendarList extends Component {
         calendarWidth={this.props.horizontal ? this.props.calendarWidth : undefined} 
         {...this.props} 
         style={this.props.calendarStyle}
+        monthComponent={this.props.monthComponent}
       />
     );
   }
@@ -291,9 +294,16 @@ class CalendarList extends Component {
     }
   }
 
+  renderHeader = () => {
+    const month = this.state.currentMonth && this.state.currentMonth.toString(this.props.monthFormat ? this.props.monthFormat : 'yyyy MM')
+    if (this.props.renderHeader) return this.props.renderHeader(month);
+    return null;
+  }
+
   render() {
     return (
       <View>
+        {this.renderHeader()}
         <FlatList
           onLayout={this.onLayout}
           ref={(c) => this.listView = c}
